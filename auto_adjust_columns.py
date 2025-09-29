@@ -25,3 +25,5 @@ def auto_adjust_columns(file):
         adjusted_width = max_length + 5  # padding
         col_letter = get_column_letter(column_cells[0].column)
         ws.column_dimensions[col_letter].width = adjusted_width
+
+    wb.save(file)
