@@ -1,5 +1,6 @@
 import re
 
+robot_name_pattern = re.compile(r'K([A-Za-z0-9]{5})([A-Za-z0-9]{1})([A-Za-z0-9]{1})(\d{4})R(\d{2})')
 
 #----- Program data patterns -----
 program_name_pattern = re.compile(r"^/PROG\s*(.+)$") #Example: /PROG  FOLGE056

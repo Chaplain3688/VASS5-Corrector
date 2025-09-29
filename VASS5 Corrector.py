@@ -3,14 +3,43 @@ import fnmatch
 import re
 import VASS5_patterns as vassp
 
-search_path = "C:\\Users\\inzun\\OneDrive\\Persona Fisica\\03 Proyectos\\Puebla VW\\VW371 Jetta\\05 Tasks\\2025 CW40 USTW5\\Correciones_USTW5"
+input_path = "C:\\Users\\inzun\\OneDrive\\Persona Fisica\\03 Proyectos\\Puebla VW\\VW371 Jetta\\05 Tasks\\2025 CW40 USTW5\\Correciones_USTW5"
 search_pattern = "folge05?.ls"
+robots= []
+
+def store_robots(input_path, robots):
+    for root, ____, files in os.walk(input_path):
+        for file in files:
+            f = file.lower()
+            robot_full_name = os.path.basename(root)
+            robot_full_name = robot_full_name.upper()
+
+            if any(r["Robot Full Name"] == robot_full_name for r in robots):
+                continue
+
+            match_robot = re.search(vassp.robot_name_pattern, robot_full_name)
+            line = ('K'+ match_robot.group(1))
+            robot_name = (match_robot.group(4) + 'R' + match_robot.group(5))
+
+            robot = {
+    "Robot Full Name": robot_full_name,
+    "Line": line,
+    "ARG": match_robot.group(2),
+    "SK": match_robot.group(3),
+    #"Line Name": line_names[line],
+    "Robot": robot_name,
+    "Saved Path": root,
+    #"Programs": programs,
+}
+            robots.append(robot)
+
+
 
 #Find all folges for Jetta in the specified directory and its subdirectories
-def search_for_jetta_folges(search_path, search_pattern):
+def search_for_jetta_folges(input_path, search_pattern):
     folges_jetta = []
 
-    for root, dirs, files in os.walk(search_path):
+    for root, dirs, files in os.walk(input_path):
         for file in files:
             filename = file.lower()
             if fnmatch.fnmatch(filename, search_pattern):
@@ -52,4 +81,10 @@ def get_program_data(lines):
     return program_data
 
 if __name__ == "__main__":
-    folges_jetta = search_for_jetta_folges(search_path, search_pattern)
+
+    store_robots(input_path, robots)
+    for robot in robots:
+        print(robot)
+
+    folges_jetta = search_for_jetta_folges(input_path, search_pattern)
+
