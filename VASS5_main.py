@@ -1,15 +1,22 @@
 import os
-import fnmatch
 import re
 import pandas as pd
+import json
 import VASS5_patterns as vassp
 import VASS5_get_program_data as vassg
+import auto_adjust_columns as aac
 
 input_path = "C:\\Users\\inzun\\OneDrive\\Persona Fisica\\03 Proyectos\\Puebla VW\\VW371 Jetta\\05 Tasks\\2025 CW40 USTW5\\Correciones_USTW5"
 robotsdata_filename_path = os.path.join(input_path, "robots_data.xlsx")
-robotsdata_filename_path = os.path.join(input_path, "programs_list.xlsx")
+robot_json_file = os.path.join(input_path, "robots_data.json")
 
-def store_robots(input_path):
+programslist_filename_path = os.path.join(input_path, "programs_list.xlsx")
+programs_json_file = os.path.join(input_path, "programs_list.json")
+
+pointslist_filename_path = os.path.join(input_path, "points_list.xlsx")
+points_json_file = os.path.join(input_path, "points_list.json")
+
+def create_robots_list(input_path):
     robots= []
     for root, ____, files in os.walk(input_path):
         for file in files:
@@ -45,11 +52,19 @@ def store_robots(input_path):
 
 if __name__ == "__main__":
 
-    robots = store_robots(input_path)
-    robots_df = pd.DataFrame(robots)
+    robots_list = create_robots_list(input_path)
+    robots_df = pd.DataFrame(robots_list)
     robots_df.to_excel(robotsdata_filename_path, index=False)
+    aac.auto_adjust_columns(robotsdata_filename_path)
 
-    programs_list = vassg.store_program_data(robots)
+    with open(robot_json_file, 'w') as json_file:
+        json.dump(robots_list, json_file, indent=4)
+
+    programs_list = vassg.create_programs_list(robots_list)
     programs_list_df = pd.DataFrame(programs_list)
-    programs_list_df.to_excel(robotsdata_filename_path, index=False)
+    programs_list_df.to_excel(programslist_filename_path, index=False)
+    aac.auto_adjust_columns(programslist_filename_path)
+
+    with open(programs_json_file, 'w') as json_file:
+        json.dump(programs_list, json_file, indent=4)
 
