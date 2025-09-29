@@ -1,5 +1,6 @@
 import re
 
+#Group 1: Line (5 alphanumeric), Group 2: ARG (1 alphanumeric), Group 3: SK (1 alphanumeric), Group 4: Robot number (4 digits), Group 5: Robot ID (2 digits)
 robot_name_pattern = re.compile(r'K([A-Za-z0-9]{5})([A-Za-z0-9]{1})([A-Za-z0-9]{1})(\d{4})R(\d{2})')
 
 #----- Program data patterns -----
@@ -48,5 +49,3 @@ uframe_pattern = re.compile(r"^\s*(\d*)?\s*:\s*(?:\/\/)?\s*UFRAME_NUM\s*=\s*(\d+
 
 #Group 1: Optional line number, Group 2: Utool number
 utool_pattern = re.compile(r"^\s*(\d*)?\s*:\s*(?:\/\/)?\s*UTOOL_NUM\s*=\s*(\d+)\s*;$") # Example:   9:  UTOOL_NUM=3 ;
-
-
