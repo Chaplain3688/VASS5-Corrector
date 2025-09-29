@@ -47,8 +47,7 @@ def safe_literal_eval(s):
         # Return an empty list if the string is malformed or not a list
         return []
 
-def store_program_data(robots):
-
+def create_programs_list(robots):
     all_programs_data = []
     for robot in robots:
         robot_id = robot["robot_id"]
@@ -61,6 +60,25 @@ def store_program_data(robots):
         
             all_programs_data.append(row_data)
 
-    programs_df = pd.DataFrame(all_programs_data)
-    return programs_df
+    return all_programs_data
+
+def create_points_list(programs, robots):
+    all_points_data = []
+    for program in create_programs_list(robots):
+            
+            program_lines = read_program_file(file_name)
+            program = get_program_main_data(program_lines)
+            
+            row_data = {
+                "robot_id": robot["robot_id"],
+                "program_id": robot["program_id"],
+                "Program": program_name,
+                "Program Name": program_data["Program Name"],
+                "Comment": program_data["Comment"],
+                "File Name": program_data["File Name"]
+            }
+        
+            all_points_data.append(row_data)
+
+    return all_points_data
 
