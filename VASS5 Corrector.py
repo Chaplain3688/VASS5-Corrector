@@ -10,17 +10,17 @@ robots= []
 def store_robots(input_path, robots):
     for root, ____, files in os.walk(input_path):
         for file in files:
-            f = file.lower()
             robot_full_name = os.path.basename(root)
             robot_full_name = robot_full_name.upper()
 
             if any(r["Robot Full Name"] == robot_full_name for r in robots):
+                robot["Programs"].append(file)
                 continue
 
             match_robot = re.search(vassp.robot_name_pattern, robot_full_name)
             line = ('K'+ match_robot.group(1))
             robot_name = (match_robot.group(4) + 'R' + match_robot.group(5))
-
+            
             robot = {
     "Robot Full Name": robot_full_name,
     "Line": line,
@@ -29,11 +29,10 @@ def store_robots(input_path, robots):
     #"Line Name": line_names[line],
     "Robot": robot_name,
     "Saved Path": root,
-    #"Programs": programs,
+    "Programs": [file],
 }
+            
             robots.append(robot)
-
-
 
 #Find all folges for Jetta in the specified directory and its subdirectories
 def search_for_jetta_folges(input_path, search_pattern):
@@ -55,7 +54,7 @@ def read_folge_file(file_name):
     lines = content.splitlines()
     return lines
 
-def get_program_data(lines):
+def get_program_data(lines, robots):
     program_data = {
         "Program Name": None,
         "Comment": None,
@@ -78,7 +77,6 @@ def get_program_data(lines):
             program_data["File Name"] = file_name_match.group(1).strip()
             continue
 
-    return program_data
 
 if __name__ == "__main__":
 
