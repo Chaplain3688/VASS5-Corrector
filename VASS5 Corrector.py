@@ -1,9 +1,11 @@
 import os
 import fnmatch
 import re
+import pandas as pd
 import VASS5_patterns as vassp
 
 input_path = "C:\\Users\\inzun\\OneDrive\\Persona Fisica\\03 Proyectos\\Puebla VW\\VW371 Jetta\\05 Tasks\\2025 CW40 USTW5\\Correciones_USTW5"
+robotsdata_filename_path = os.path.join(input_path, "robots_data.xlsx")
 search_pattern = "folge05?.ls"
 robots= []
 
@@ -81,8 +83,8 @@ def get_program_data(lines, robots):
 if __name__ == "__main__":
 
     store_robots(input_path, robots)
-    for robot in robots:
-        print(robot)
+    robots_df = pd.DataFrame(robots)
+    robots_df.to_excel(robotsdata_filename_path, index=False)
+
 
     folges_jetta = search_for_jetta_folges(input_path, search_pattern)
-
