@@ -81,6 +81,7 @@ def create_points_list(robots, programs):
                         "program_id": program["program_id"],
                         "point_id": patterns.point_pattern.match(line).group(2),
                         "Line Number": patterns.point_pattern.match(line).group(1) if patterns.point_pattern.match(line).group(1) else None
+                        
                     }
                     all_points_data.append(row_data)
 
