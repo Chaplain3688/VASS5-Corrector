@@ -4,15 +4,14 @@ import re
 robot_name_pattern = re.compile(r'K([A-Za-z0-9]{5})([A-Za-z0-9]{1})([A-Za-z0-9]{1})(\d{4})R(\d{2})')
 
 #----- Program data patterns -----
-program_name_pattern = re.compile(r"^/PROG\s*(.+)$") #Example: /PROG  FOLGE056
-program_comment_pattern = re.compile(r"^COMMENT\s*=\s*\"(.{1,16})\";$") #Example: COMMENT		= "VW371 Jetta";
-program_filename_pattern = re.compile(r"^FILE_NAME\s*=\s*(.+);$") #Example: FILE_NAME	= FOLGE051;
+program_name_pattern = re.compile(r"^/PROG\s*(\w+)$") #Example: /PROG  FOLGE056
+program_comment_pattern = re.compile(r"^COMMENT\s*=\s*\"(.{0,16})\";$") #Example: COMMENT		= "VW371 Jetta";
+program_filename_pattern = re.compile(r"^FILE_NAME\s*=\s*(\w*);$") #Example: FILE_NAME	= FOLGE051;
+
 
 #----- Point data patterns -----
-#Group 1: Optional line number, Group 2: Point number
-point_pattern = re.compile(r"^\s*(\d*)?\s*:\s*(?:\/\/)?\s*[JLC]\s+P\[(\d+)(?:\:.*)?\].*;$") # Example:   11:J P[2] 100% CNT0 ACC100 TB    .10sec,P-SPS    ;
-
-#point_pattern = re.compile(r"^\s*(\d*)?\s*:\s*(?:\/\/)?\s*[JLC]\s+P\[(\d+)(?:\:.*)?\]\s*(CNT|CD)(\d{1,3})\s*(ACC)?(\d*)?(\d{1,3})\s*(TB|DB)\s*(\d{1,3}\.\d{1,2})(sec|mm)(,)?(\.*)?;$") # Example:   11:J P[2] 100% CNT0 ACC100 TB    .10sec,P-SPS    ;
+#Group 1: Optional line number, Group 2: Movement type (J, L, C), Group 3: Point number, Group 4: Speed value, Group 5: Speed Type, Group 6: Continuity type (CNT or CD), Group 7: Continuity value (0-999), Group 8: ACC keyword, Group 9: ACC value (0-999), Group 10: TB or DB keyword, Group 11: TB/DB value (float with 2 decimals), Group 12: TB unit (sec or mm), Group 13: Comma if there are additional parameters, Group 14: Additional parameters
+point_pattern = re.compile(r"^\s*(\d*)?\s*:\s*(?:\/\/)?\s*([JLC])\s+P\[(\d+)(?:\:.*)?\]\s*(\d{1,5})(%|mm\/sec)\s*(CNT|CD)(\d{1,3})\s*(ACC)?(\d{1,3})?\s*(TB|DB)\s*(\d{0,3}\.\d{1,2})(sec|mm)(,)?(.*)?;$") # Example:   11:J P[2] 100% CNT0 ACC100 TB    .10sec,P-SPS    ;
 
 point_end_pattern = re.compile(r"^\s*------\s*;$") #------ ;
 
