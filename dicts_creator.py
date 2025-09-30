@@ -3,7 +3,6 @@ import pandas as pd
 import patterns
 import VASS5_main as vassm
 
-
 robotsdata_filename_path = os.path.join(vassm.input_path, "robots_data.xlsx")
 
 df_robots = pd.read_excel(robotsdata_filename_path)
@@ -63,8 +62,8 @@ def get_program_main_data(program_lines):
 
     return program_data
 
-def create_points_list(robots, programs):
-    all_points_data = []
+def create_points_parameters_list(robots, programs):
+    all_points_parameters_data = []
 
     robots_by_id = {robot["robot_id"]: robot for robot in robots}
     for program in programs:            
@@ -79,11 +78,21 @@ def create_points_list(robots, programs):
                     row_data = {
                         "robot_id": program["robot_id"],
                         "program_id": program["program_id"],
-                        "point_id": patterns.point_pattern.match(line).group(2),
-                        "Line Number": patterns.point_pattern.match(line).group(1) if patterns.point_pattern.match(line).group(1) else None
-                        
+                        "point_id": patterns.point_pattern.match(line).group(3),
+                        "Line Number": patterns.point_pattern.match(line).group(1) if patterns.point_pattern.match(line).group(1) else None,
+                        "Movement Type": patterns.point_pattern.match(line).group(2),
+                        "Speed Value": patterns.point_pattern.match(line).group(4),
+                        "Speed Type": patterns.point_pattern.match(line).group(5),
+                        "Continuity Type": patterns.point_pattern.match(line).group(6),
+                        "Continuity Value": patterns.point_pattern.match(line).group(7),
+                        "ACC Type": patterns.point_pattern.match(line).group(8) if patterns.point_pattern.match(line).group(8) else None,
+                        "ACC Value": patterns.point_pattern.match(line).group(9) if patterns.point_pattern.match(line).group(9) else None,
+                        "TB/DB Type": patterns.point_pattern.match(line).group(10) if patterns.point_pattern.match(line).group(10) else None,
+                        "TB/DB Value": patterns.point_pattern.match(line).group(11) if patterns.point_pattern.match(line).group(11) else None,
+                        "TB/DB Unit": patterns.point_pattern.match(line).group(12) if patterns.point_pattern.match(line).group(12) else None,
+                        "Additional Parameters": patterns.point_pattern.match(line).group(13) + patterns.point_pattern.match(line).group(14) if patterns.point_pattern.match(line).group(13) else None
                     }
-                    all_points_data.append(row_data)
+                    all_points_parameters_data.append(row_data)
 
-    return all_points_data
+    return all_points_parameters_data
 
