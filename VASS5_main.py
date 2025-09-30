@@ -13,8 +13,11 @@ robot_json_file = os.path.join(input_path, "robots_data.json")
 programslist_filename_path = os.path.join(input_path, "programs_list.xlsx")
 programs_json_file = os.path.join(input_path, "programs_list.json")
 
-pointslist_filename_path = os.path.join(input_path, "points_list.xlsx")
-points_json_file = os.path.join(input_path, "points_list.json")
+points_parameterslist_filename_path = os.path.join(input_path, "points_parameters_list.xlsx")
+points_parameters_json_file = os.path.join(input_path, "points_parameters_list.json")
+
+points_logic_list_filename_path = os.path.join(input_path, "points_logic_list.xlsx")
+points_logic_list_json_file = os.path.join(input_path, "points_logic_list.json")
 
 def create_robots_list(input_path):
     robots= []
@@ -68,11 +71,18 @@ if __name__ == "__main__":
     with open(programs_json_file, 'w') as json_file:
         json.dump(programs_list, json_file, indent=4)
 
+    points_parameters_list = dicre.create_points_parameters_list(robots_list, programs_list)
+    points_parameters_list_df = pd.DataFrame(points_parameters_list)
+    points_parameters_list_df.to_excel(points_parameterslist_filename_path, index=False)
+    aac.auto_adjust_columns(points_parameterslist_filename_path)
 
-    points_list = dicre.create_points_list(robots_list, programs_list)
-    points_list_df = pd.DataFrame(points_list)
-    points_list_df.to_excel(pointslist_filename_path, index=False)
-    aac.auto_adjust_columns(pointslist_filename_path)
+    with open(points_parameters_json_file, 'w') as json_file:
+        json.dump(points_parameters_list, json_file, indent=4)
 
-    with open(points_json_file, 'w') as json_file:
-        json.dump(points_list, json_file, indent=4)
+    points_logic_list = dicre.create_points_logic_list(robots_list, programs_list)
+    points_logic_list_df = pd.DataFrame(points_logic_list)
+    points_logic_list_df.to_excel(points_logic_list_filename_path, index=False)
+    aac.auto_adjust_columns(points_logic_list_filename_path)
+
+    with open(points_logic_list_json_file, 'w') as json_file:
+        json.dump(points_logic_list, json_file, indent=4)

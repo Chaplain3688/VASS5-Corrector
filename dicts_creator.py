@@ -96,3 +96,60 @@ def create_points_parameters_list(robots, programs):
 
     return all_points_parameters_data
 
+def create_points_logic_list(robots, programs):
+    all_points_logic_data = []
+
+    robots_by_id = {robot["robot_id"]: robot for robot in robots}
+    for program in programs:            
+            robot_id = program["robot_id"]
+            point_id = 1
+            
+            current_robot = robots_by_id.get(robot_id)
+
+            program_lines = read_program_file(os.path.join(current_robot["Saved Path"], program["Program"]))
+            row_data = {}
+            read_logic = False
+            read_comments = True
+            comments_lines = []
+            read_lines = False
+            
+            for line in program_lines:
+                if line != "/MN" and not read_lines:
+                    continue
+                elif line == "/POS":
+                    break
+                else:
+                    read_lines = True
+
+                if read_lines:
+                    
+                    if read_comments and not patterns.point_pattern.match(line) and line != "/MN":
+                        comments_lines.append(line)
+                        continue
+
+                    if patterns.point_pattern.match(line):
+                        point_id = patterns.point_pattern.match(line).group(3)
+                        logic_lines = []
+                        read_logic = True
+                        read_comments = False
+                        continue
+
+                    if patterns.point_end_pattern.match(line):
+                        read_logic = False
+                        read_comments = True
+                        row_data = {
+                            "robot_id": program["robot_id"],
+                            "program_id": program["program_id"],
+                            "point_id": point_id,
+                            "Logic": logic_lines,
+                            "Comments": comments_lines
+                        }
+                        all_points_logic_data.append(row_data)
+                        comments_lines = []
+                        continue
+
+                    if read_logic:
+                        logic_lines.append(line)
+
+                    
+    return all_points_logic_data
