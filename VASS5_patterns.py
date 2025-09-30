@@ -12,6 +12,8 @@ program_filename_pattern = re.compile(r"^FILE_NAME\s*=\s*(.+);$") #Example: FILE
 #Group 1: Optional line number, Group 2: Point number
 point_pattern = re.compile(r"^\s*(\d*)?\s*:\s*(?:\/\/)?\s*[JLC]\s+P\[(\d+)(?:\:.*)?\].*;$") # Example:   11:J P[2] 100% CNT0 ACC100 TB    .10sec,P-SPS    ;
 
+#point_pattern = re.compile(r"^\s*(\d*)?\s*:\s*(?:\/\/)?\s*[JLC]\s+P\[(\d+)(?:\:.*)?\]\s*(CNT|CD)(\d{1,3})\s*(ACC)?(\d*)?(\d{1,3})\s*(TB|DB)\s*(\d{1,3}\.\d{1,2})(sec|mm)(,)?(\.*)?;$") # Example:   11:J P[2] 100% CNT0 ACC100 TB    .10sec,P-SPS    ;
+
 point_end_pattern = re.compile(r"^\s*------\s*;$") #------ ;
 
 
