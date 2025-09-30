@@ -2,7 +2,7 @@ import os
 import re
 import pandas as pd
 import json
-import patterns as vassp
+import patterns
 import dicts_creator as dicre
 import auto_adjust_columns as aac
 
@@ -27,7 +27,7 @@ def create_robots_list(input_path):
                 robot["Programs"].append(file)
                 continue
 
-            match_robot = re.search(vassp.robot_name_pattern, robot_full_name)
+            match_robot = re.search(patterns.robot_name_pattern, robot_full_name)
             if match_robot is None:
                 continue
 

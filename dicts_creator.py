@@ -1,7 +1,6 @@
 import os
 import pandas as pd
-import ast
-import patterns as vassp
+import patterns
 import VASS5_main as vassm
 
 robotsdata_filename_path = os.path.join(vassm.input_path, "robots_data.xlsx")
@@ -38,17 +37,17 @@ def get_program_main_data(program_lines):
     }
 
     for line in program_lines:
-        prog_name_match = vassp.program_name_pattern.match(line)
+        prog_name_match = patterns.program_name_pattern.match(line)
         if prog_name_match:
             program_data["Program Name"] = prog_name_match.group(1).strip()
             continue
 
-        comment_match = vassp.program_comment_pattern.match(line)
+        comment_match = patterns.program_comment_pattern.match(line)
         if comment_match:
             program_data["Comment"] = comment_match.group(1).strip()
             continue
 
-        file_name_match = vassp.program_filename_pattern.match(line)
+        file_name_match = patterns.program_filename_pattern.match(line)
         if file_name_match:
             program_data["File Name"] = file_name_match.group(1).strip()
             continue
