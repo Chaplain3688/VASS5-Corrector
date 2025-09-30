@@ -68,3 +68,11 @@ if __name__ == "__main__":
     with open(programs_json_file, 'w') as json_file:
         json.dump(programs_list, json_file, indent=4)
 
+
+    points_list = dicre.create_points_list(robots_list, programs_list)
+    points_list_df = pd.DataFrame(points_list)
+    points_list_df.to_excel(pointslist_filename_path, index=False)
+    aac.auto_adjust_columns(pointslist_filename_path)
+
+    with open(points_json_file, 'w') as json_file:
+        json.dump(points_list, json_file, indent=4)
