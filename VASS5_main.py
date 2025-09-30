@@ -2,11 +2,11 @@ import os
 import re
 import pandas as pd
 import json
-import VASS5_patterns as vassp
-import VASS5_get_program_data as vassg
+import patterns as vassp
+import dicts_creator as dicre
 import auto_adjust_columns as aac
 
-input_path = "C:\\Users\\inzun\\OneDrive\\Persona Fisica\\03 Proyectos\\Puebla VW\\VW371 Jetta\\05 Tasks\\2025 CW40 USTW5\\Correciones_USTW5"
+input_path = "C:\\Users\\inzun\\OneDrive\\Persona Fisica\\Proyectos\\Puebla VW\\VW371 Jetta\\05 Tasks\\2025 CW40 USTW5\\Correciones_USTW5"
 robotsdata_filename_path = os.path.join(input_path, "robots_data.xlsx")
 robot_json_file = os.path.join(input_path, "robots_data.json")
 
@@ -60,7 +60,7 @@ if __name__ == "__main__":
     with open(robot_json_file, 'w') as json_file:
         json.dump(robots_list, json_file, indent=4)
 
-    programs_list = vassg.create_programs_list(robots_list)
+    programs_list = dicre.create_programs_list(robots_list)
     programs_list_df = pd.DataFrame(programs_list)
     programs_list_df.to_excel(programslist_filename_path, index=False)
     aac.auto_adjust_columns(programslist_filename_path)

@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 import ast
-import VASS5_patterns as vassp
+import patterns as vassp
 import VASS5_main as vassm
 
 robotsdata_filename_path = os.path.join(vassm.input_path, "robots_data.xlsx")
@@ -14,6 +14,21 @@ def read_program_file(file_name):
         content = f.read() 
     lines = content.splitlines()
     return lines
+
+def create_programs_list(robots):
+    all_programs_data = []
+    for robot in robots:
+        robot_id = robot["robot_id"]
+        for program_name in robot["Programs"]:
+            row_data = {
+            "robot_id": robot_id,
+            "program_id": program_name,
+            "Program": program_name
+        }
+        
+            all_programs_data.append(row_data)
+
+    return all_programs_data
 
 def get_program_main_data(program_lines):
     program_data = {
@@ -39,28 +54,6 @@ def get_program_main_data(program_lines):
             continue
 
     return program_data
-
-def safe_literal_eval(s):
-    try:
-        return ast.literal_eval(s)
-    except (ValueError, SyntaxError):
-        # Return an empty list if the string is malformed or not a list
-        return []
-
-def create_programs_list(robots):
-    all_programs_data = []
-    for robot in robots:
-        robot_id = robot["robot_id"]
-        for program_name in robot["Programs"]:
-            row_data = {
-            "robot_id": robot_id,
-            "program_id": program_name,
-            "Program": program_name
-        }
-        
-            all_programs_data.append(row_data)
-
-    return all_programs_data
 
 def create_points_list(programs, robots):
     all_points_data = []
