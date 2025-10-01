@@ -12,12 +12,16 @@ def create_file(path, lines):
 
 def write_program(path, robots, programs):
 
-    robot_id = robots[0]["robot_id"]
-    for program in programs:
-        if program["robot_id"] == robot_id:
-            lines = []
-            lines.append(write_attributes(program))
-            create_file(os.path.join(path, program["Program Name"] + ".ls"), lines)
+    for robot in robots:
+        new_robot_dir = os.path.join(path, robot["Robot Full Name"])
+        os.makedirs(new_robot_dir, exist_ok=True)
+
+        for program in programs:
+            if robot["robot_id"] == program["robot_id"]:
+                lines = []
+                print("Writing program:", program["Program Name"], "for robot:", robot["Robot Full Name"])
+                lines.append(write_attributes(program))
+                create_file(os.path.join(new_robot_dir, program["Program Name"] + ".ls"), lines)
 
 def write_attributes(program):
 
@@ -34,7 +38,8 @@ def write_attributes(program):
     lines.append("LINE_COUNT = " + str(program["LINE_COUNT"]) + ";")
     lines.append("MEMORY_SIZE= " + str(program["MEMORY_SIZE"]) + ";")
     lines.append("PROTECT    = " + program["PROTECT"] + ";")
-    lines.append("STORAGE    = " + program["STORAGE"] + ";")
+    if program["STORAGE"]:
+        lines.append("STORAGE    = " + program["STORAGE"] + ";")
     lines.append("TCD:  STACK_SIZE = " + str(program["STACK_SIZE"]) + ",")
     lines.append("      TASK_PRIORITY = " + str(program["TASK_PRIORITY"]) + ",")
     lines.append("      TIME_SLICE = " + str(program["TIME_SLICE"]) + ",")
