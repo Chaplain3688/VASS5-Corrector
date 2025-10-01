@@ -22,6 +22,9 @@ points_parameters_json_file = os.path.join(datalists_path, "points_parameters_li
 points_logic_list_filename_path = os.path.join(datalists_path, "points_logic_list.xlsx")
 points_logic_list_json_file = os.path.join(datalists_path, "points_logic_list.json")
 
+points_positions_list_filename_path = os.path.join(datalists_path, "points_positions_list.xlsx")
+points_positions_list_json_file = os.path.join(datalists_path, "points_positions_list.json")
+
 if __name__ == "__main__":
 
     robots_list = dicre.create_robots_list(robots_path)
@@ -56,5 +59,12 @@ if __name__ == "__main__":
     with open(points_logic_list_json_file, 'w') as json_file:
         json.dump(points_logic_list, json_file, indent=4)
 
+    points_positions_list = dicre.create_points_positions_list(robots_list, programs_list)
+    points_positions_list_df = pd.DataFrame(points_positions_list)
+    points_positions_list_df.to_excel(points_positions_list_filename_path, index=False)
+    aac.auto_adjust_columns(points_positions_list_filename_path)
 
-    pw.write_program(output_file_path, robots_list, programs_list)
+    with open(points_positions_list_json_file, 'w') as json_file:
+        json.dump(points_positions_list, json_file, indent=4)
+
+    pw.write_program(output_file_path, robots_list, programs_list, points_parameters_list, points_logic_list)

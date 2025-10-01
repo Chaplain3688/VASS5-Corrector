@@ -1,4 +1,5 @@
 import os
+import time
 
 def create_file(path, lines):
     # Ensure the directory exists
@@ -9,7 +10,7 @@ def create_file(path, lines):
             for line in lines:
                 f.write(line + '\n')
 
-def write_program(path, robots, programs):
+def write_program(path, robots, programs, points_parameters_list, points_logic_list):
 
     for robot in robots:
         new_robot_dir = os.path.join(path, robot["Robot Full Name"])
@@ -23,6 +24,8 @@ def write_program(path, robots, programs):
                 lines.append(write_attributes_section(program))
                 if program["Applications exists"]:
                     lines.append(write_applications_section(program))
+
+                lines.append(write_main_section(program, points_parameters_list, points_logic_list))
 
                 create_file(os.path.join(new_robot_dir, program["Program Name"] + ".ls"), lines)
 
@@ -67,11 +70,47 @@ def write_applications_section(program):
     output = "\n".join(lines)
     return output
 
-def write_main_section(program):
+def write_main_section(program, points_parameters, points_logic):
+
+    program_points = []
+
+    for point in points_parameters:
+        if program["robot_id"] == point["robot_id"] and program["program_id"] == point["program_id"]:
+            match_point = point.copy()
+            for point in points_logic:
+                if program["robot_id"] == point["robot_id"] and program["program_id"] == point["program_id"] and match_point["point_id"] == point["point_id"]:
+                    match_point.update(point)
+                    program_points.append(match_point)
 
     lines = []
     lines.append("/MN")
-    # Add main section content here if needed
+
+    for point in program_points:
+        #print('robot_id:', point["robot_id"])
+        #print('program_id:', point["program_id"])
+        #print('point_id:', point["point_id"])
+        #print('Comments:', point["Comments"])
+        #print('Logic:', point["Logic"])
+        #time.sleep(5)
+
+
+        if point["Comments"]:
+            for comment in point["Comments"]:
+                lines.append(comment)
+                #print("Adding comment:", comment)
+        if point["Logic"]:
+            for logic in point["Logic"]:
+                lines.append(logic)
+                #print("Adding logic:", logic)
+                #time.sleep(4)
+
+
+    output = "\n".join(lines)
+    return output
+
+def write_pos_section(program, points_parameters, points_logic):
+    lines = []
+    lines.append("/POS")
 
     output = "\n".join(lines)
     return output

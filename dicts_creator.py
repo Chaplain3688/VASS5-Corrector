@@ -272,7 +272,12 @@ def create_points_logic_list(robots, programs):
     all_points_logic_data = []
 
     robots_by_id = {robot["robot_id"]: robot for robot in robots}
-    for program in programs:            
+    for program in programs:  
+            if program["program_id"].lower().startswith("makro"):
+                is_makro = True
+            else:
+                is_makro = False
+
             robot_id = program["robot_id"]
             point_id = 1
             
@@ -282,6 +287,7 @@ def create_points_logic_list(robots, programs):
             row_data = {}
             read_logic = False
             read_comments = True
+            logic_lines = []
             comments_lines = []
             read_lines = False
             
@@ -289,13 +295,25 @@ def create_points_logic_list(robots, programs):
                 if line != "/MN" and not read_lines:
                     continue
                 elif line == "/POS":
+                    if is_makro:
+                        point_id = 0
+                        row_data = {
+                                "robot_id": program["robot_id"],
+                                "program_id": program["program_id"],
+                                "point_id": point_id,
+                                "Logic": logic_lines,
+                                "Comments": comments_lines
+                            }
+                        all_points_logic_data.append(row_data)
                     break
-                else:
+                elif line == "/MN" and not read_lines:
                     read_lines = True
+                    continue
+                    
 
                 if read_lines:
                     
-                    if read_comments and not patterns.point_pattern.match(line) and line != "/MN":
+                    if read_comments and not patterns.point_pattern.match(line) and line != "/MN" and not is_makro:
                         comments_lines.append(line)
                         continue
 
@@ -320,8 +338,45 @@ def create_points_logic_list(robots, programs):
                         comments_lines = []
                         continue
 
-                    if read_logic:
+                    if read_logic or is_makro:
                         logic_lines.append(line)
+
+            print("Finished program:", program["Program Name"])
 
                     
     return all_points_logic_data
+
+def create_points_positions_list(robots, programs):
+    all_points_positions_data = []
+    robots_by_id = {robot["robot_id"]: robot for robot in robots}
+
+    for program in programs:            
+            robot_id = program["robot_id"]
+            
+            current_robot = robots_by_id.get(robot_id)
+
+            program_lines = read_program_file(os.path.join(current_robot["Saved Path"], program["Program File Name"]))
+            read_positions = False
+            positions_data = []
+            for line in program_lines:
+                line
+
+                if patterns.program_end_pattern.match(line):
+                    break
+
+                if read_positions:
+                    positions_data.append(line)
+                    continue
+                    
+                if patterns.program_position_pattern.match(line):
+                    read_positions = True
+                    continue
+
+            row_data = {
+                "robot_id": program["robot_id"],
+                "program_id": program["program_id"],
+                "Positions Data": positions_data,
+            }
+            all_points_positions_data.append(row_data)
+
+    return all_points_positions_data
