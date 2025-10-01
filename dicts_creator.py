@@ -1,7 +1,6 @@
 import os
 import re
 import patterns
-import VASS5_main as vassm
 
 #Read the content of a file and divide it into lines
 def read_program_file(file_name):
