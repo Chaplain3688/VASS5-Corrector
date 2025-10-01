@@ -12,16 +12,17 @@ def read_program_file(file_name):
 def create_robots_list(input_path):
     robots= []
     for root, ____, files in os.walk(input_path):
+        programs = []
         for file in files:
             robot_full_name = os.path.basename(root)
             robot_full_name = robot_full_name.upper()
 
-            if any(r["Robot Full Name"] == robot_full_name for r in robots):
-                robot["Programs"].append(file)
-                continue
-
             match_robot = re.search(patterns.robot_name_pattern, robot_full_name)
             if match_robot is None:
+                continue
+
+            if any(r["Robot Full Name"] == robot_full_name for r in robots):
+                robot["Programs"].append(file)
                 continue
 
             line = ('K'+ match_robot.group(1))
@@ -105,7 +106,10 @@ def get_program_main_data(program_lines):
         "PAUSE_REQUEST": None,
         "DEFAULT_GROUP": None,
         "CONTROL_CODE": None,
+        "Applications": None,
     }
+
+    read_applications = False
 
     for line in program_lines:
         prog_name_match = patterns.program_name_pattern.match(line)
@@ -207,6 +211,18 @@ def get_program_main_data(program_lines):
         if control_code_match:
             program_data["CONTROL_CODE"] = control_code_match.group(1).strip()
             continue
+
+        if patterns.program_applications_pattern.match(line):
+            read_applications = True
+            applications_lines = []
+            continue
+
+        if read_applications:
+            applications_lines.append(line)
+            continue
+
+        if patterns.program_main_pattern.match(line):
+            break
 
     return program_data
 
