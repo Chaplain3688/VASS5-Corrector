@@ -1,5 +1,6 @@
 import os
 import re
+import time
 import patterns
 
 #Read the content of a file and divide it into lines
@@ -77,6 +78,7 @@ def create_programs_list(robots):
             "PAUSE_REQUEST": program_data["PAUSE_REQUEST"],
             "DEFAULT_GROUP": program_data["DEFAULT_GROUP"],
             "CONTROL_CODE": program_data["CONTROL_CODE"],
+            "Applications": program_data["Applications"],
             }
 
             all_programs_data.append(row_data)
@@ -108,6 +110,7 @@ def get_program_main_data(program_lines):
         "Applications": None,
     }
 
+    applications_lines = []
     read_applications = False
 
     for line in program_lines:
@@ -213,15 +216,18 @@ def get_program_main_data(program_lines):
 
         if patterns.program_applications_pattern.match(line):
             read_applications = True
-            applications_lines = []
             continue
+
+        if patterns.program_main_pattern.match(line):
+            if applications_lines:
+                program_data["Applications"] = applications_lines
+            applications_lines = []
+            break
 
         if read_applications:
             applications_lines.append(line)
             continue
 
-        if patterns.program_main_pattern.match(line):
-            break
 
     return program_data
 

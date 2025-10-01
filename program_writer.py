@@ -1,6 +1,5 @@
 import os
 
-
 def create_file(path, lines):
     # Ensure the directory exists
     os.makedirs(os.path.dirname(path), exist_ok=True)
@@ -20,10 +19,13 @@ def write_program(path, robots, programs):
             if robot["robot_id"] == program["robot_id"]:
                 lines = []
                 print("Writing program:", program["Program Name"], "for robot:", robot["Robot Full Name"])
-                lines.append(write_attributes(program))
+
+                lines.append(write_attributes_section(program))
+                lines.append(write_applications_section(program))
+
                 create_file(os.path.join(new_robot_dir, program["Program Name"] + ".ls"), lines)
 
-def write_attributes(program):
+def write_attributes_section(program):
 
     lines = []
     lines.append("/PROG  " + program["Program Name"])
@@ -49,5 +51,17 @@ def write_attributes(program):
     lines.append("DEFAULT_GROUP = " + program["DEFAULT_GROUP"] + ";")
     lines.append("CONTROL_CODE  = " + program["CONTROL_CODE"] + ";")
     
+    output = "\n".join(lines)
+    return output
+
+def write_applications_section(program):
+
+    lines = []
+    lines.append("/APPL")
+    print(program["Applications"])
+    if program["Applications"]:
+        for app_line in program["Applications"]:
+            lines.append(app_line)
+
     output = "\n".join(lines)
     return output
