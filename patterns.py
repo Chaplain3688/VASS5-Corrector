@@ -25,7 +25,12 @@ program_pause_request_pattern = re.compile(r"^\s*PAUSE_REQUEST\s*=\s*(\d+);$") #
 program_default_group_pattern = re.compile(r"^DEFAULT_GROUP\s*=\s*(.+);$") #Example:   DEFAULT_GROUP	= 1,1,1,1,*;
 program_control_code_pattern = re.compile(r"^CONTROL_CODE\s*=\s*(.+);$") #Example:   CONTROL_CODE	= 00000000 00000000;
 
+#----- Program sections patterns -----
+program_attributes_pattern = re.compile(r"^/ATTR$") #Example: /ATTR
 program_applications_pattern = re.compile(r"^/APPL$") #Example: /APPL
+program_main_pattern = re.compile(r"^/MN$")#Example: /MN
+program_position_pattern = re.compile(r"^/POS$")#Example: /POS
+program_end_pattern = re.compile(r"^/END$")#Example: /END
 
 #----- Point data patterns -----
 #Group 1: Optional line number, Group 2: Movement type (J, L, C), Group 3: Point number, Group 4: Speed value, Group 5: Speed Type, Group 6: Continuity type (CNT or CD), Group 7: Continuity value (0-999), Group 8: ACC keyword, Group 9: ACC value (0-999), Group 10: TB or DB keyword, Group 11: TB/DB value (float with 2 decimals), Group 12: TB unit (sec or mm), Group 13: Comma if there are additional parameters, Group 14: Additional parameters
