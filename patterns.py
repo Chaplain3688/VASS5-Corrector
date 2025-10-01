@@ -5,8 +5,25 @@ robot_name_pattern = re.compile(r'K([A-Za-z0-9]{5})([A-Za-z0-9]{1})([A-Za-z0-9]{
 
 #----- Program data patterns -----
 program_name_pattern = re.compile(r"^/PROG\s*(\w+)$") #Example: /PROG  FOLGE056
+program_owner_pattern = re.compile(r"^OWNER\s*=\s*(.*);$") #Example: OWNER		= engenhar;
 program_comment_pattern = re.compile(r"^COMMENT\s*=\s*\"(.{0,16})\";$") #Example: COMMENT		= "VW371 Jetta";
+program_progsize_pattern = re.compile(r"^PROG_SIZE\s*=\s*(\d+);$") #Example: PROG_SIZE	= 1024;
+program_create_pattern = re.compile(r"^CREATE\s*=\s*DATE\s*(\d{2}-\d{2}-\d{2})\s*TIME\s*(\d{2}:\d{2}:\d{2});$") #Example: CREATE		= DATE 04-04-27  TIME 08:38:34;
+program_modified_pattern = re.compile(r"^MODIFIED\s*=\s*DATE\s*(\d{2}-\d{2}-\d{2})\s*TIME\s*(\d{2}:\d{2}:\d{2});$") #Example: MODIFIED	= DATE 25-09-27  TIME 14:24:46;
 program_filename_pattern = re.compile(r"^FILE_NAME\s*=\s*(\w*);$") #Example: FILE_NAME	= FOLGE051;
+program_version_pattern = re.compile(r"^VERSION\s*=\s*(\d+);$") #Example:   VERSION		= 0;
+program_line_count_pattern = re.compile(r"^LINE_COUNT\s*=\s*(\d+);$") #Example:   LINE_COUNT	= 40;
+program_memory_size_pattern = re.compile(r"^MEMORY_SIZE\s*=\s*(\d+);$") #Example:   MEMORY_SIZE	= 8326;
+program_protect_pattern = re.compile(r"^PROTECT\s*=\s*(.+);$") #Example:   PROTECT		= READ_WRITE;
+program_storage_pattern = re.compile(r"^STORAGE\s*=\s*(.+);$") #Example:   STORAGE		= SHADOW;
+program_stack_size_pattern = re.compile(r"^TCD:\s*STACK_SIZE\s*=\s*(\d+),$") #Example:   TCD:  STACK_SIZE	= 500,
+program_task_priority_pattern = re.compile(r"^\s*TASK_PRIORITY\s*=\s*(\d+),$") #Example:   TASK_PRIORITY	= 50,
+program_time_slice_pattern = re.compile(r"^\s*TIME_SLICE\s*=\s*(\d+),$") #Example:   TIME_SLICE	= 0,
+program_busy_lamp_off_pattern = re.compile(r"^\s*BUSY_LAMP_OFF\s*=\s*(\d+),$") #Example:   BUSY_LAMP_OFF	= 0,
+program_abort_request_pattern = re.compile(r"^\s*ABORT_REQUEST\s*=\s*(\d+),$") #Example:   ABORT_REQUEST	= 0,
+program_pause_request_pattern = re.compile(r"^\s*PAUSE_REQUEST\s*=\s*(\d+);$") #Example:   PAUSE_REQUEST	= 0;
+program_default_group_pattern = re.compile(r"^DEFAULT_GROUP\s*=\s*(.+),$") #Example:   DEFAULT_GROUP	= 1,1,1,1,*;
+program_control_code_pattern = re.compile(r"^CONTROL_CODE\s*=\s*(.+);$") #Example:   CONTROL_CODE	= 00000000 00000000;
 
 
 #----- Point data patterns -----

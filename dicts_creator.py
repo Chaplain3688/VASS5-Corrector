@@ -3,10 +3,6 @@ import pandas as pd
 import patterns
 import VASS5_main as vassm
 
-robotsdata_filename_path = os.path.join(vassm.input_path, "robots_data.xlsx")
-
-df_robots = pd.read_excel(robotsdata_filename_path)
-
 #Read the content of a file and divide it into lines
 def read_program_file(file_name):
     with open(file_name, "r") as f:
@@ -26,12 +22,29 @@ def create_programs_list(robots):
 
             row_data = {
             "robot_id": robot_id,
-            "program_id": program_name,
-            "Program": program_name,
+            "program_id": program_data["Program Name"],
+            "Program File Name": program_name,
             "Program Name": program_data["Program Name"],
-            "Comment": program_data["Comment"],
-            "File Name": program_data["File Name"]
-        }
+            "OWNER": program_data["OWNER"],
+            "COMMENT": program_data["COMMENT"],
+            "PROG_SIZE": program_data["PROG_SIZE"],
+            "CREATE": program_data["CREATE"],
+            "MODIFIED": program_data["MODIFIED"],
+            "FILE_NAME": program_data["FILE_NAME"],
+            "VERSION": program_data["VERSION"],
+            "LINE_COUNT": program_data["LINE_COUNT"],
+            "MEMORY_SIZE": program_data["MEMORY_SIZE"],
+            "PROTECT": program_data["PROTECT"],
+            "STORAGE": program_data["STORAGE"],
+            "STACK_SIZE": program_data["STACK_SIZE"],
+            "TASK_PRIORITY": program_data["TASK_PRIORITY"],
+            "TIME_SLICE": program_data["TIME_SLICE"],
+            "BUSY_LAMP_OFF": program_data["BUSY_LAMP_OFF"],
+            "ABORT_REQUEST": program_data["ABORT_REQUEST"],
+            "PAUSE_REQUEST": program_data["PAUSE_REQUEST"],
+            "DEFAULT_GROUP": program_data["DEFAULT_GROUP"],
+            "CONTROL_CODE": program_data["CONTROL_CODE"],
+            }
 
             all_programs_data.append(row_data)
 
@@ -40,8 +53,25 @@ def create_programs_list(robots):
 def get_program_main_data(program_lines):
     program_data = {
         "Program Name": None,
-        "Comment": None,
-        "File Name": None
+        "OWNER": None,
+        "COMMENT": None,
+        "PROG_SIZE": None,
+        "CREATE": None,
+        "MODIFIED": None,
+        "FILE_NAME": None,
+        "VERSION": None,
+        "LINE_COUNT": None,
+        "MEMORY_SIZE": None,
+        "PROTECT": None,
+        "STORAGE": None,
+        "STACK_SIZE": None,
+        "TASK_PRIORITY": None,
+        "TIME_SLICE": None,
+        "BUSY_LAMP_OFF": None,
+        "ABORT_REQUEST": None,
+        "PAUSE_REQUEST": None,
+        "DEFAULT_GROUP": None,
+        "CONTROL_CODE": None,
     }
 
     for line in program_lines:
@@ -50,14 +80,99 @@ def get_program_main_data(program_lines):
             program_data["Program Name"] = prog_name_match.group(1).strip()
             continue
 
+        program_owner_pattern_match = patterns.program_owner_pattern.match(line)
+        if program_owner_pattern_match:
+            program_data["OWNER"] = program_owner_pattern_match.group(1).strip()
+            continue
+
+        create_match = patterns.program_create_pattern.match(line)
+        if create_match:
+            program_data["CREATE"] = create_match.group(1).strip() + " " + create_match.group(2).strip()
+            continue
+        
         comment_match = patterns.program_comment_pattern.match(line)
         if comment_match:
-            program_data["Comment"] = comment_match.group(1).strip()
+            program_data["COMMENT"] = comment_match.group(1).strip()
+            continue
+
+        prog_size_match = patterns.program_progsize_pattern.match(line)
+        if prog_size_match:
+            program_data["PROG_SIZE"] = int(prog_size_match.group(1).strip())
+            continue
+            
+        modified_match = patterns.program_modified_pattern.match(line)
+        if modified_match:
+            program_data["MODIFIED"] = modified_match.group(1).strip() + " " + modified_match.group(2).strip()
             continue
 
         file_name_match = patterns.program_filename_pattern.match(line)
         if file_name_match:
-            program_data["File Name"] = file_name_match.group(1).strip()
+            program_data["FILE_NAME"] = file_name_match.group(1).strip()
+            continue
+
+        version_match = patterns.program_version_pattern.match(line)
+        if version_match:
+            program_data["VERSION"] = int(version_match.group(1).strip())
+            continue
+
+        line_count_match = patterns.program_line_count_pattern.match(line)
+        if line_count_match:
+            program_data["LINE_COUNT"] = int(line_count_match.group(1).strip())
+            continue
+
+        memory_size_match = patterns.program_memory_size_pattern.match(line)
+        if memory_size_match:
+            program_data["MEMORY_SIZE"] = int(memory_size_match.group(1).strip())
+            continue
+
+        protect_match = patterns.program_protect_pattern.match(line)
+        if protect_match:
+            program_data["PROTECT"] = protect_match.group(1).strip()
+            continue
+
+        storage_match = patterns.program_storage_pattern.match(line)
+        if storage_match:
+            program_data["STORAGE"] = storage_match.group(1).strip()
+            continue
+
+        stack_size_match = patterns.program_stack_size_pattern.match(line)
+        if stack_size_match:
+            program_data["STACK_SIZE"] = int(stack_size_match.group(1).strip())
+            continue
+
+        task_priority_match = patterns.program_task_priority_pattern.match(line)
+        if task_priority_match:
+            program_data["TASK_PRIORITY"] = int(task_priority_match.group(1).strip())
+            continue
+
+        time_slice_match = patterns.program_time_slice_pattern.match(line)
+        if time_slice_match:
+            program_data["TIME_SLICE"] = int(time_slice_match.group(1).strip())
+            continue
+
+        busy_lamp_off_match = patterns.program_busy_lamp_off_pattern.match(line)
+        if busy_lamp_off_match:
+            program_data["BUSY_LAMP_OFF"] = int(busy_lamp_off_match.group(1).strip())
+            continue
+
+        abort_request_match = patterns.program_abort_request_pattern.match(line)
+        if abort_request_match:
+            program_data["ABORT_REQUEST"] = int(abort_request_match.group(1).strip())
+            continue
+
+        pause_request_match = patterns.program_pause_request_pattern.match(line)
+        if pause_request_match:
+            program_data["PAUSE_REQUEST"] = int(pause_request_match.group(1).strip())
+            continue
+
+        default_group_match = patterns.program_default_group_pattern.match(line)
+        if default_group_match:
+            program_data["DEFAULT_GROUP"] = default_group_match.group(1).strip()
+            continue
+
+        control_code_match = patterns.program_control_code_pattern.match(line)
+        if control_code_match:
+            program_data["CONTROL_CODE"] = control_code_match.group(1).strip()
             continue
 
     return program_data
@@ -71,7 +186,7 @@ def create_points_parameters_list(robots, programs):
             
             current_robot = robots_by_id.get(robot_id)
 
-            program_lines = read_program_file(os.path.join(current_robot["Saved Path"], program["Program"]))
+            program_lines = read_program_file(os.path.join(current_robot["Saved Path"], program["Program File Name"]))
             row_data = {}
             for line in program_lines:
                 if patterns.point_pattern.match(line):
@@ -106,7 +221,7 @@ def create_points_logic_list(robots, programs):
             
             current_robot = robots_by_id.get(robot_id)
 
-            program_lines = read_program_file(os.path.join(current_robot["Saved Path"], program["Program"]))
+            program_lines = read_program_file(os.path.join(current_robot["Saved Path"], program["Program File Name"]))
             row_data = {}
             read_logic = False
             read_comments = True

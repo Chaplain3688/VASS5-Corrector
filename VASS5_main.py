@@ -7,17 +7,21 @@ import dicts_creator as dicre
 import auto_adjust_columns as aac
 
 input_path = "C:\\Users\\inzun\\OneDrive\\Persona Fisica\\Proyectos\\Puebla VW\\VW371 Jetta\\05 Tasks\\2025 CW40 USTW5\\Correciones_USTW5"
-robotsdata_filename_path = os.path.join(input_path, "robots_data.xlsx")
-robot_json_file = os.path.join(input_path, "robots_data.json")
+robots_path = os.path.join(input_path, "Robots")
+datalists_path = os.path.join(input_path, "Data Lists")
+output_file_path = os.path.join(input_path, "Corrected_Programs")
 
-programslist_filename_path = os.path.join(input_path, "programs_list.xlsx")
-programs_json_file = os.path.join(input_path, "programs_list.json")
+robotsdata_filename_path = os.path.join(datalists_path, "robots_data.xlsx")
+robot_json_file = os.path.join(datalists_path, "robots_data.json")
 
-points_parameterslist_filename_path = os.path.join(input_path, "points_parameters_list.xlsx")
-points_parameters_json_file = os.path.join(input_path, "points_parameters_list.json")
+programslist_filename_path = os.path.join(datalists_path, "programs_list.xlsx")
+programs_json_file = os.path.join(datalists_path, "programs_list.json")
 
-points_logic_list_filename_path = os.path.join(input_path, "points_logic_list.xlsx")
-points_logic_list_json_file = os.path.join(input_path, "points_logic_list.json")
+points_parameterslist_filename_path = os.path.join(datalists_path, "points_parameters_list.xlsx")
+points_parameters_json_file = os.path.join(datalists_path, "points_parameters_list.json")
+
+points_logic_list_filename_path = os.path.join(datalists_path, "points_logic_list.xlsx")
+points_logic_list_json_file = os.path.join(datalists_path, "points_logic_list.json")
 
 def create_robots_list(input_path):
     robots= []
