@@ -24,7 +24,7 @@ points_logic_list_json_file = os.path.join(datalists_path, "points_logic_list.js
 
 if __name__ == "__main__":
 
-    robots_list = dicre.create_robots_list(input_path)
+    robots_list = dicre.create_robots_list(robots_path)
     robots_df = pd.DataFrame(robots_list)
     robots_df.to_excel(robotsdata_filename_path, index=False)
     aac.auto_adjust_columns(robotsdata_filename_path)
