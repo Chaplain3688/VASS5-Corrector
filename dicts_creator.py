@@ -1,5 +1,5 @@
 import os
-import pandas as pd
+import re
 import patterns
 import VASS5_main as vassm
 
@@ -9,6 +9,40 @@ def read_program_file(file_name):
         content = f.read() 
     lines = content.splitlines()
     return lines
+
+def create_robots_list(input_path):
+    robots= []
+    for root, ____, files in os.walk(input_path):
+        for file in files:
+            robot_full_name = os.path.basename(root)
+            robot_full_name = robot_full_name.upper()
+
+            if any(r["Robot Full Name"] == robot_full_name for r in robots):
+                robot["Programs"].append(file)
+                continue
+
+            match_robot = re.search(patterns.robot_name_pattern, robot_full_name)
+            if match_robot is None:
+                continue
+
+            line = ('K'+ match_robot.group(1))
+            robot_id = (match_robot.group(1)[1:] + match_robot.group(2) + match_robot.group(4) + 'R' + match_robot.group(5))
+            robot_name = (match_robot.group(4) + 'R' + match_robot.group(5))
+            
+            robot = {
+    "robot_id": robot_id,
+    "Robot Full Name": robot_full_name,
+    "Line": line,
+    "ARG": match_robot.group(2),
+    "SK": match_robot.group(3),
+    #"Line Name": line_names[line],
+    "Robot": robot_name,
+    "Saved Path": root,
+    "Programs": [file],
+}
+            
+            robots.append(robot)
+    return robots
 
 def create_programs_list(robots):
     all_programs_data = []
