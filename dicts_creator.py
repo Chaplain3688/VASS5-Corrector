@@ -78,6 +78,7 @@ def create_programs_list(robots):
             "PAUSE_REQUEST": program_data["PAUSE_REQUEST"],
             "DEFAULT_GROUP": program_data["DEFAULT_GROUP"],
             "CONTROL_CODE": program_data["CONTROL_CODE"],
+            "Applications exists": program_data["Applications exists"],
             "Applications": program_data["Applications"],
             }
 
@@ -107,6 +108,7 @@ def get_program_main_data(program_lines):
         "PAUSE_REQUEST": None,
         "DEFAULT_GROUP": None,
         "CONTROL_CODE": None,
+        "Applications exists": False,
         "Applications": None,
     }
 
@@ -220,6 +222,7 @@ def get_program_main_data(program_lines):
 
         if patterns.program_main_pattern.match(line):
             if applications_lines:
+                program_data["Applications exists"] = read_applications
                 program_data["Applications"] = applications_lines
             applications_lines = []
             break
