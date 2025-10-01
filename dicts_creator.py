@@ -296,11 +296,10 @@ def create_points_logic_list(robots, programs):
                     continue
                 elif line == "/POS":
                     if is_makro:
-                        point_id = 0
                         row_data = {
                                 "robot_id": program["robot_id"],
                                 "program_id": program["program_id"],
-                                "point_id": point_id,
+                                "point_id": "1",
                                 "Logic": logic_lines,
                                 "Comments": comments_lines
                             }

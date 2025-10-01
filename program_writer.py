@@ -72,15 +72,19 @@ def write_applications_section(program):
 
 def write_main_section(program, points_parameters, points_logic):
 
-    program_points = []
+    program_points = []        
 
-    for point in points_parameters:
+    for point in points_logic:
         if program["robot_id"] == point["robot_id"] and program["program_id"] == point["program_id"]:
             match_point = point.copy()
-            for point in points_logic:
-                if program["robot_id"] == point["robot_id"] and program["program_id"] == point["program_id"] and match_point["point_id"] == point["point_id"]:
-                    match_point.update(point)
-                    program_points.append(match_point)
+            if program["program_id"].lower().startswith("makro"):
+                program_points.append(match_point)
+            else:
+                for point in points_parameters:
+                    if program["robot_id"] == point["robot_id"] and program["program_id"] == point["program_id"] and match_point["point_id"] == point["point_id"]:
+                        match_point.update(point)
+                        program_points.append(match_point)
+
 
     lines = []
     lines.append("/MN")
@@ -97,12 +101,12 @@ def write_main_section(program, points_parameters, points_logic):
         if point["Comments"]:
             for comment in point["Comments"]:
                 lines.append(comment)
-                #print("Adding comment:", comment)
+                print("Adding comment:", comment)
+
         if point["Logic"]:
             for logic in point["Logic"]:
                 lines.append(logic)
-                #print("Adding logic:", logic)
-                #time.sleep(4)
+                print("Adding logic:", logic)
 
 
     output = "\n".join(lines)
