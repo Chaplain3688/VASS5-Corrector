@@ -12,7 +12,6 @@ def read_program_file(file_name):
 def create_robots_list(input_path):
     robots= []
     for root, ____, files in os.walk(input_path):
-        programs = []
         for file in files:
             robot_full_name = os.path.basename(root)
             robot_full_name = robot_full_name.upper()
