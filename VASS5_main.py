@@ -3,6 +3,7 @@ import pandas as pd
 import json
 import dicts_creator as dicre
 import auto_adjust_columns as aac
+import program_writer as pw
 
 input_path = "C:\\Users\\inzun\\OneDrive\\Persona Fisica\\Proyectos\\Puebla VW\\VW371 Jetta\\05 Tasks\\2025 CW40 USTW5\\Correciones_USTW5"
 robots_path = os.path.join(input_path, "Robots")
@@ -54,3 +55,6 @@ if __name__ == "__main__":
 
     with open(points_logic_list_json_file, 'w') as json_file:
         json.dump(points_logic_list, json_file, indent=4)
+
+
+    pw.write_program(output_file_path, robots_list, programs_list)
