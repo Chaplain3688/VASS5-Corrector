@@ -67,4 +67,4 @@ if __name__ == "__main__":
     with open(points_positions_list_json_file, 'w') as json_file:
         json.dump(points_positions_list, json_file, indent=4)
 
-    pw.write_program(output_file_path, robots_list, programs_list, points_parameters_list, points_logic_list)
+    pw.write_program(output_file_path, robots_list, programs_list, points_parameters_list, points_logic_list, points_positions_list)

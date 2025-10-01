@@ -10,7 +10,7 @@ def create_file(path, lines):
             for line in lines:
                 f.write(line + '\n')
 
-def write_program(path, robots, programs, points_parameters_list, points_logic_list):
+def write_program(path, robots, programs, points_parameters_list, points_logic_list, points_positions_list):
 
     for robot in robots:
         new_robot_dir = os.path.join(path, robot["Robot Full Name"])
@@ -26,7 +26,9 @@ def write_program(path, robots, programs, points_parameters_list, points_logic_l
                     lines.append(write_applications_section(program))
 
                 lines.append(write_main_section(program, points_parameters_list, points_logic_list))
+                lines.append(write_pos_section(program, points_positions_list))
 
+                
                 create_file(os.path.join(new_robot_dir, program["Program Name"] + ".ls"), lines)
 
 def write_attributes_section(program):
@@ -97,24 +99,32 @@ def write_main_section(program, points_parameters, points_logic):
         #print('Logic:', point["Logic"])
         #time.sleep(5)
 
-
         if point["Comments"]:
             for comment in point["Comments"]:
                 lines.append(comment)
-                print("Adding comment:", comment)
+                #print("Adding comment:", comment)
 
         if point["Logic"]:
             for logic in point["Logic"]:
                 lines.append(logic)
-                print("Adding logic:", logic)
-
+                #print("Adding logic:", logic)
 
     output = "\n".join(lines)
     return output
 
-def write_pos_section(program, points_parameters, points_logic):
+def write_pos_section(program, points_positions):
     lines = []
+
     lines.append("/POS")
+
+    for points_positions in points_positions:
+
+        if program["robot_id"] == points_positions["robot_id"] and program["program_id"] == points_positions["program_id"]:
+            if points_positions["Positions Data"]:
+                for line in points_positions["Positions Data"]:
+                    lines.append(line)
+
+    lines.append("/END")
 
     output = "\n".join(lines)
     return output
