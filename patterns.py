@@ -22,9 +22,10 @@ program_time_slice_pattern = re.compile(r"^\s*TIME_SLICE\s*=\s*(\d+),$") #Exampl
 program_busy_lamp_off_pattern = re.compile(r"^\s*BUSY_LAMP_OFF\s*=\s*(\d+),$") #Example:   BUSY_LAMP_OFF	= 0,
 program_abort_request_pattern = re.compile(r"^\s*ABORT_REQUEST\s*=\s*(\d+),$") #Example:   ABORT_REQUEST	= 0,
 program_pause_request_pattern = re.compile(r"^\s*PAUSE_REQUEST\s*=\s*(\d+);$") #Example:   PAUSE_REQUEST	= 0;
-program_default_group_pattern = re.compile(r"^DEFAULT_GROUP\s*=\s*(.+),$") #Example:   DEFAULT_GROUP	= 1,1,1,1,*;
+program_default_group_pattern = re.compile(r"^DEFAULT_GROUP\s*=\s*(.+);$") #Example:   DEFAULT_GROUP	= 1,1,1,1,*;
 program_control_code_pattern = re.compile(r"^CONTROL_CODE\s*=\s*(.+);$") #Example:   CONTROL_CODE	= 00000000 00000000;
 
+program_applications_pattern = re.compile(r"^/APPL$") #Example: /APPL
 
 #----- Point data patterns -----
 #Group 1: Optional line number, Group 2: Movement type (J, L, C), Group 3: Point number, Group 4: Speed value, Group 5: Speed Type, Group 6: Continuity type (CNT or CD), Group 7: Continuity value (0-999), Group 8: ACC keyword, Group 9: ACC value (0-999), Group 10: TB or DB keyword, Group 11: TB/DB value (float with 2 decimals), Group 12: TB unit (sec or mm), Group 13: Comma if there are additional parameters, Group 14: Additional parameters
