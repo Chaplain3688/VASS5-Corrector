@@ -22,6 +22,7 @@ def write_program(path, robots, programs, points_parameters_list, points_logic_l
                 print("Writing program:", program["Program Name"], "for robot:", robot["Robot Full Name"])
 
                 lines.append(write_attributes_section(program))
+                print(program['Applications exists'])
                 if program["Applications exists"]:
                     lines.append(write_applications_section(program))
 
@@ -64,7 +65,6 @@ def write_applications_section(program):
 
     lines = []
     lines.append("/APPL")
-    print(program["Applications"])
     if program["Applications"]:
         for app_line in program["Applications"]:
             lines.append(app_line)

@@ -221,8 +221,8 @@ def get_program_main_data(program_lines):
             continue
 
         if patterns.program_main_pattern.match(line):
+            program_data["Applications exists"] = read_applications
             if applications_lines:
-                program_data["Applications exists"] = read_applications
                 program_data["Applications"] = applications_lines
             applications_lines = []
             break
@@ -339,9 +339,6 @@ def create_points_logic_list(robots, programs):
 
                     if read_logic or is_makro:
                         logic_lines.append(line)
-
-            print("Finished program:", program["Program Name"])
-
                     
     return all_points_logic_data
 
