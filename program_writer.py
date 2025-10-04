@@ -1,5 +1,6 @@
 import os
 import time
+import corrector
 
 def create_file(path, lines):
     # Ensure the directory exists
@@ -21,7 +22,8 @@ def write_program(path, robots, programs, points_parameters_list, points_logic_l
                 lines = []
                 print("Writing program:", program["Program Name"], "for robot:", robot["Robot Full Name"])
 
-                lines.append(write_attributes_section(program))
+                correction = corrector.correct_folge(program)
+                lines.append(write_attributes_section(program, correction))
                 if program["Applications exists"]:
                     lines.append(write_applications_section(program))
 
@@ -31,17 +33,17 @@ def write_program(path, robots, programs, points_parameters_list, points_logic_l
                 
                 create_file(os.path.join(new_robot_dir, program["Program Name"] + ".ls"), lines)
 
-def write_attributes_section(program):
+def write_attributes_section(program, correction):
 
     lines = []
-    lines.append("/PROG  " + program["Program Name"])
+    lines.append("/PROG  " + correction["Program Name"])
     lines.append("/ATTR")
-    lines.append("OWNER\t\t= " + program["OWNER"] + ";")
-    lines.append("COMMENT\t\t= \"" + program["COMMENT"] + "\";")
+    lines.append("OWNER\t\t= " + correction["OWNER"] + ";")
+    lines.append("COMMENT\t\t= \"" + correction["COMMENT"] + "\";")
     lines.append("PROG_SIZE\t= " + str(program["PROG_SIZE"]) + ";")
     lines.append("CREATE\t\t= DATE " + program["CREATE"][:9] + " TIME " + program["CREATE"][9:] + ";")
     lines.append("MODIFIED\t= DATE " + program["MODIFIED"][:9] + " TIME " + program["MODIFIED"][9:] + ";")
-    lines.append("FILE_NAME\t= " + program["FILE_NAME"] + ";")
+    lines.append("FILE_NAME\t= " + correction["FILE_NAME"] + ";")
     lines.append("VERSION\t\t= " + str(program["VERSION"]) + ";")
     lines.append("LINE_COUNT\t= " + str(program["LINE_COUNT"]) + ";")
     lines.append("MEMORY_SIZE\t= " + str(program["MEMORY_SIZE"]) + ";")
