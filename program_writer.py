@@ -22,7 +22,6 @@ def write_program(path, robots, programs, points_parameters_list, points_logic_l
                 print("Writing program:", program["Program Name"], "for robot:", robot["Robot Full Name"])
 
                 lines.append(write_attributes_section(program))
-                print(program['Applications exists'])
                 if program["Applications exists"]:
                     lines.append(write_applications_section(program))
 
@@ -73,8 +72,9 @@ def write_applications_section(program):
     return output
 
 def write_main_section(program, points_parameters, points_logic):
-
-    program_points = []        
+    program_points = []   
+    lines = []     
+    lines.append("/MN")
 
     for point in points_logic:
         if program["robot_id"] == point["robot_id"] and program["program_id"] == point["program_id"]:
@@ -87,14 +87,10 @@ def write_main_section(program, points_parameters, points_logic):
                         match_point.update(point)
                         program_points.append(match_point)
 
-    lines = []
-    lines.append("/MN")
-
     for point in program_points:
         if point["Comments"]:
             for comment in point["Comments"]:
                 lines.append(comment)
-                #print("Adding comment:", comment)
 
         if not program["program_id"].lower().startswith("makro"):
 
@@ -107,7 +103,6 @@ def write_main_section(program, points_parameters, points_logic):
                                point["Speed Type"] + " " + 
                                point["Continuity Type"] + 
                                str(point["Continuity Value"]))
-
 
             if point["ACC Type"]:
                 point_parameter += " ACC" + str(point["ACC Value"])
