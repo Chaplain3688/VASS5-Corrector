@@ -5,25 +5,25 @@ import dicts_creator as dicre
 import auto_adjust_columns as aac
 import program_writer as pw
 
-input_path = "C:\\Users\\inzun\\OneDrive\\Persona Fisica\\Proyectos\\Puebla VW\\VW371 Jetta\\05 Tasks\\2025 CW40 USTW5\\Correciones_USTW5"
-robots_path = os.path.join(input_path, "Robots")
+input_path = r"C:\Users\inzun\OneDrive\Persona Fisica\Proyectos\Puebla VW\VW371 Jetta\05 Tasks\2025 CW40 USTW5\Correciones_USTW5"
+robots_path = os.path.join(input_path, "Corrected_Programs_Manually")
 datalists_path = os.path.join(input_path, "Data Lists")
 output_file_path = os.path.join(input_path, "Corrected_Programs")
 
-robotsdata_filename_path = os.path.join(datalists_path, "robots_data.xlsx")
-robot_json_file = os.path.join(datalists_path, "robots_data.json")
+robotsdata_filename_path = os.path.join(datalists_path, "01_robots_data.xlsx")
+robot_json_file = os.path.join(datalists_path, "01_robots_data.json")
 
-programslist_filename_path = os.path.join(datalists_path, "programs_list.xlsx")
-programs_json_file = os.path.join(datalists_path, "programs_list.json")
+programslist_filename_path = os.path.join(datalists_path, "02_programs_list.xlsx")
+programs_json_file = os.path.join(datalists_path, "02_programs_list.json")
 
-points_parameterslist_filename_path = os.path.join(datalists_path, "points_parameters_list.xlsx")
-points_parameters_json_file = os.path.join(datalists_path, "points_parameters_list.json")
+points_parameterslist_filename_path = os.path.join(datalists_path, "03_points_parameters_list.xlsx")
+points_parameters_json_file = os.path.join(datalists_path, "03_points_parameters_list.json")
 
-points_logic_list_filename_path = os.path.join(datalists_path, "points_logic_list.xlsx")
-points_logic_list_json_file = os.path.join(datalists_path, "points_logic_list.json")
+points_logic_list_filename_path = os.path.join(datalists_path, "04_points_logic_list.xlsx")
+points_logic_list_json_file = os.path.join(datalists_path, "04_points_logic_list.json")
 
-points_positions_list_filename_path = os.path.join(datalists_path, "points_positions_list.xlsx")
-points_positions_list_json_file = os.path.join(datalists_path, "points_positions_list.json")
+points_positions_list_filename_path = os.path.join(datalists_path, "05_points_positions_list.xlsx")
+points_positions_list_json_file = os.path.join(datalists_path, "05_points_positions_list.json")
 
 if __name__ == "__main__":
 
@@ -67,4 +67,4 @@ if __name__ == "__main__":
     with open(points_positions_list_json_file, 'w') as json_file:
         json.dump(points_positions_list, json_file, indent=4)
 
-    pw.write_program(output_file_path, robots_list, programs_list, points_parameters_list, points_logic_list, points_positions_list)
+    #pw.write_program(output_file_path, robots_list, programs_list, points_parameters_list, points_logic_list, points_positions_list)
