@@ -3,14 +3,6 @@
 		{
 			"name": "VASS5",
 			"path": "."
-		},
-		{
-			"name": "Robots",
-			"path": "../../../../Persona Fisica/Proyectos/Puebla VW/VW371 Jetta/05 Tasks/2025 CW40 USTW5/Correciones_USTW5/Robots"
-		},
-		{
-			"name": "Masters",
-			"path": "../../../../Persona Fisica/Proyectos/Puebla VW/VW371 Jetta/05 Tasks/2025 CW40 USTW5/Masters"
 		}
 	],
 	"settings": {}
