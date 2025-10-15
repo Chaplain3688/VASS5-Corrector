@@ -3,6 +3,8 @@ import re
 import time
 import patterns
 
+valid_programs = ("FOLGE", "MAKRO", "UP")
+
 #Read the content of a file and divide it into lines
 def read_program_file(file_name):
     with open(file_name, "r") as f:
@@ -56,7 +58,7 @@ def create_programs_list(robots):
 
             row_data = {
             "robot_id": robot_id,
-            "program_id": program_data["Program Name"],
+            "program_id": program_name.split(".")[0],
             "Program File Name": program_name,
             "Program Name": program_data["Program Name"],
             "OWNER": program_data["OWNER"],
@@ -235,34 +237,46 @@ def get_program_main_data(program_lines):
     return program_data
 
 def create_points_parameters_list(robots, programs):
+
     all_points_parameters_data = []
 
     robots_by_id = {robot["robot_id"]: robot for robot in robots}
-    for program in programs:            
+    for program in programs:
+
+            if not program["program_id"].upper().startswith(valid_programs):
+                continue
+
             robot_id = program["robot_id"]
             
             current_robot = robots_by_id.get(robot_id)
 
             program_lines = read_program_file(os.path.join(current_robot["Saved Path"], program["Program File Name"]))
             row_data = {}
+            
+            count = sum(1 for l in program_lines if patterns.point_main_pattern.match(l))
+
             for line in program_lines:
-                if patterns.point_pattern.match(line):
+                if patterns.point_main_pattern.match(line):
+
                     row_data = {
                         "robot_id": program["robot_id"],
                         "program_id": program["program_id"],
-                        "point_id": patterns.point_pattern.match(line).group(3),
-                        "Line Number": patterns.point_pattern.match(line).group(1) if patterns.point_pattern.match(line).group(1) else None,
-                        "Movement Type": patterns.point_pattern.match(line).group(2),
-                        "Speed Value": patterns.point_pattern.match(line).group(4),
-                        "Speed Type": patterns.point_pattern.match(line).group(5),
-                        "Continuity Type": patterns.point_pattern.match(line).group(6),
-                        "Continuity Value": patterns.point_pattern.match(line).group(7),
-                        "ACC Type": patterns.point_pattern.match(line).group(8) if patterns.point_pattern.match(line).group(8) else None,
-                        "ACC Value": patterns.point_pattern.match(line).group(9) if patterns.point_pattern.match(line).group(9) else None,
-                        "TB/DB Type": patterns.point_pattern.match(line).group(10) if patterns.point_pattern.match(line).group(10) else None,
-                        "TB/DB Value": patterns.point_pattern.match(line).group(11) if patterns.point_pattern.match(line).group(11) else None,
-                        "TB/DB Unit": patterns.point_pattern.match(line).group(12) if patterns.point_pattern.match(line).group(12) else None,
-                        "Additional Parameters": patterns.point_pattern.match(line).group(13) + patterns.point_pattern.match(line).group(14) if patterns.point_pattern.match(line).group(13) else None
+                        "point_id": patterns.point_main_pattern.match(line).group(3),
+                        "Last Point": True if int(patterns.point_main_pattern.match(line).group(3)) == count else False,
+                        "Line Number": patterns.point_main_pattern.match(line).group(1) if patterns.point_main_pattern.match(line).group(1) else None,
+                        "Movement Type": patterns.point_main_pattern.match(line).group(2),
+                        "Speed Value": patterns.point_speed_pattern.search(line).group(1),
+                        "Speed Type": patterns.point_speed_pattern.search(line).group(2),
+                        "Continuity Type": patterns.point_continuity_pattern.search(line).group(1),
+                        "Continuity Value": "0" if patterns.point_continuity_pattern.search(line).group(1) == "FINE" else patterns.point_continuity_pattern.search(line).group(2),
+                        "ACC Type": patterns.point_acc_pattern.search(line).group(1) if patterns.point_acc_pattern.search(line) else None,
+                        "ACC Value": patterns.point_acc_pattern.search(line).group(2) if patterns.point_acc_pattern.search(line) else None,
+                        "TB/DB Type": patterns.point_trigger_pattern.search(line).group(1) if patterns.point_trigger_pattern.search(line) else None,
+                        "TB/DB Value": patterns.point_trigger_pattern.search(line).group(2) if patterns.point_trigger_pattern.search(line) else None,
+                        "TB/DB Unit": patterns.point_trigger_pattern.search(line).group(3) if patterns.point_trigger_pattern.search(line) else None,
+                        "PSPS": patterns.point_psps_pattern.search(line).group(0) if patterns.point_psps_pattern.search(line) else None,
+                        "Offset": patterns.point_offset_pattern.search(line).group(1) if patterns.point_offset_pattern.search(line) else None,
+                        "Tool Offset": patterns.point_tool_offset_pattern.search(line).group(1) if patterns.point_tool_offset_pattern.search(line) else None
                     }
                     all_points_parameters_data.append(row_data)
 
@@ -312,12 +326,12 @@ def create_points_logic_list(robots, programs):
 
                 if read_lines:
                     
-                    if read_comments and not patterns.point_pattern.match(line) and line != "/MN" and not is_makro:
+                    if read_comments and not patterns.point_main_pattern.match(line) and line != "/MN" and not is_makro:
                         comments_lines.append(line)
                         continue
 
-                    if patterns.point_pattern.match(line):
-                        point_id = patterns.point_pattern.match(line).group(3)
+                    if patterns.point_main_pattern.match(line):
+                        point_id = patterns.point_main_pattern.match(line).group(3)
                         logic_lines = []
                         read_logic = True
                         read_comments = False

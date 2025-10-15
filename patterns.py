@@ -36,9 +36,25 @@ program_end_pattern = re.compile(r"^/END$")#Example: /END
 #Group 1: Optional line number, Group 2: Movement type (J, L, C), Group 3: Point number, Group 4: Speed value, Group 5: Speed Type, Group 6: Continuity type (CNT or CD), Group 7: Continuity value (0-999), Group 8: ACC keyword, Group 9: ACC value (0-999), Group 10: TB or DB keyword, Group 11: TB/DB value (float with 2 decimals), Group 12: TB unit (sec or mm), Group 13: Comma if there are additional parameters, Group 14: Additional parameters
 point_pattern = re.compile(r"^\s*(\d*)?\s*:\s*(?:\/\/)?\s*([JLC])\s+P\[(\d+)(?:\:.*)?\]\s*(\d{1,5})(%|mm\/sec)\s*(CNT|CD)(\d{1,3})\s*(ACC)?(\d{1,3})?\s*(TB|DB)\s*(\d{0,3}\.\d{1,2})(sec|mm)(,)?(.*)?;$") # Example:   11:J P[2] 100% CNT0 ACC100 TB    .10sec,P-SPS    ;
 
+#Group 1: Optional line number, Group 2: Movement type (J, L, C), Group 3: Point number, Group 4: Additional parameters
+point_main_pattern = re.compile(r"^\s*(\d*)?\s*:\s*(?:\/\/)?\s*([JLC])\s+P\[(\d+)(?:\:.*)?\]\s*(.*);$") # Example:   11:J P[2]  ;
+#Group 1: Speed value, Group 2: Speed Type
+point_speed_pattern = re.compile(r"(\d{1,5})(%|mm\/sec)") # Example: 100%
+#Group 1: Continuity type (FINE, CNT or CD), Group 2: Continuity value (0-999)
+point_continuity_pattern = re.compile(r"(FINE|CNT|CD)(\d{1,3})?") # Example: CNT0 OR FINE
+#Group 1: ACC keyword, Group 2: ACC value (0-999)
+point_acc_pattern = re.compile(r"(ACC)(\d{1,3})") # Example: ACC100
+#Group 1: TB or DB keyword, Group 2: TB/DB value (float with 2 decimals), Group 3: TB unit (sec or mm)
+point_trigger_pattern = re.compile(r"(TB|DB)\s*(\d{0,3}\.\d{1,2})(sec|mm)") # Example: TB    .10sec
+#P-SPS pattern
+point_psps_pattern = re.compile(r",P-SPS") # Example: ,P-SPS
+#Group 1: Position Register number
+point_offset_pattern = re.compile(r" Offset,PR\[(\d+)\]") #Example: Offset,PR[11]
+#Group 1: Position Register number
+point_tool_offset_pattern = re.compile(r"Tool_Offset,PR\[(\d+)\]") #Example: Tool_Offset,PR[11]
+
 point_end_pattern = re.compile(r"^\s*------\s*;$") #------ ;
-
-
+    
 #----- Point position patterns -----
 #Group 1: Point number
 point_coordinates_pattern = re.compile(r"^P\[(\d+)\]\s*=\s*\{$") # Example:   P[1]{
