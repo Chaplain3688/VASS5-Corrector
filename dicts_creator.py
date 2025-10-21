@@ -283,76 +283,97 @@ def create_points_parameters_list(robots, programs):
     return all_points_parameters_data
 
 def create_points_logic_list(robots, programs):
+
     all_points_logic_data = []
-
     robots_by_id = {robot["robot_id"]: robot for robot in robots}
-    for program in programs:  
-            if program["program_id"].lower().startswith("makro"):
-                is_makro = True
-            else:
-                is_makro = False
 
-            robot_id = program["robot_id"]
-            point_id = 1
-            
-            current_robot = robots_by_id.get(robot_id)
+    for program in programs:
 
-            program_lines = read_program_file(os.path.join(current_robot["Saved Path"], program["Program File Name"]))
-            row_data = {}
-            read_logic = False
-            read_comments = True
-            logic_lines = []
-            comments_lines = []
-            read_lines = False
+        
+        print("Processing program:", program["program_id"])
             
+        if not program["program_id"].upper().startswith(valid_programs):
+            continue
+
+
+        robot_id = program["robot_id"]
+        current_robot = robots_by_id.get(robot_id)
+        program_lines = read_program_file(os.path.join(current_robot["Saved Path"], program["Program File Name"]))
+        point_id = 1
+        row_data = {}
+        read_logic = False
+        read_comments = True
+        logic_lines = []
+        comments_lines = []
+        read_lines = False
+
+        # Handle MAKRO programs separately  
+        if program["program_id"].lower().startswith("makro"):
             for line in program_lines:
-                if line != "/MN" and not read_lines:
+                if read_lines and line != "/MN" and line != "/POS":
+                    logic_lines.append(line)
+                    print(line)
                     continue
-                elif line == "/POS":
-                    if is_makro:
-                        row_data = {
-                                "robot_id": program["robot_id"],
-                                "program_id": program["program_id"],
-                                "point_id": "1",
-                                "Logic": logic_lines,
-                                "Comments": comments_lines
-                            }
-                        all_points_logic_data.append(row_data)
-                    break
+                elif line != "/MN" and not read_lines:
+                    continue
                 elif line == "/MN" and not read_lines:
                     read_lines = True
                     continue
-                    
-
-                if read_lines:
-                    
-                    if read_comments and not patterns.point_main_pattern.match(line) and line != "/MN" and not is_makro:
-                        comments_lines.append(line)
-                        continue
-
-                    if patterns.point_main_pattern.match(line):
-                        point_id = patterns.point_main_pattern.match(line).group(3)
-                        logic_lines = []
-                        read_logic = True
-                        read_comments = False
-                        continue
-
-                    if patterns.point_end_pattern.match(line):
-                        read_logic = False
-                        read_comments = True
-                        row_data = {
+                elif line == "/POS":
+                    row_data = {
                             "robot_id": program["robot_id"],
                             "program_id": program["program_id"],
-                            "point_id": point_id,
+                            "point_id": "MAKRO",
                             "Logic": logic_lines,
-                            "Comments": comments_lines
+                            "Comments": None
                         }
-                        all_points_logic_data.append(row_data)
-                        comments_lines = []
-                        continue
+                    all_points_logic_data.append(row_data)
+                    break                    
+            continue
 
-                    if read_logic or is_makro:
-                        logic_lines.append(line)
+        # Handle FOLGE and UP programs
+        for line in program_lines:
+            if read_lines and line != "/MN" and line != "/POS":
+                
+                if read_logic and not patterns.point_main_pattern.match(line) and not patterns.point_end_pattern.match(line):
+                    logic_lines.append(line)
+                    continue
+                elif read_comments and not patterns.point_main_pattern.match(line) and not patterns.point_end_pattern.match(line):
+                    comments_lines.append(line)
+                    continue
+                elif patterns.point_main_pattern.match(line):
+                    point_id = patterns.point_main_pattern.match(line).group(3)
+                    logic_lines = []
+                    read_logic = True
+                    read_comments = False
+                    continue
+                elif patterns.point_end_pattern.match(line):
+                    read_logic = False
+                    read_comments = True
+                    row_data = {
+                        "robot_id": program["robot_id"],
+                        "program_id": program["program_id"],
+                        "point_id": point_id,
+                        "Logic": logic_lines,
+                        "Comments": comments_lines
+                    }
+                    all_points_logic_data.append(row_data)
+                    comments_lines = []
+                    continue
+            elif line != "/MN" and not read_lines:
+                continue
+            elif line == "/MN" and not read_lines:
+                read_lines = True
+            elif line == "/POS":
+                row_data = {
+                    "robot_id": program["robot_id"],
+                    "program_id": program["program_id"],
+                    "point_id": "After Last Point",
+                    "Logic": None,
+                    "Comments": comments_lines
+                }
+                all_points_logic_data.append(row_data)
+                break
                     
     return all_points_logic_data
 
