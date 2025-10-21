@@ -2,6 +2,7 @@ import pandas as pd
 import os
 import xlwings as xw  # New import for controlling Excel
 import re # New import for regular expressions
+import VASS5_main as main
 
 def run_excel_macro(filepath, macro_name):
     """
@@ -17,6 +18,10 @@ def run_excel_macro(filepath, macro_name):
         return True
 
     print(f"\nAttempting to run macro '{macro_name}' in '{filepath}'...")
+
+    if not os.path.exists(filepath):
+        print(f"Error: The file '{filepath}' does not exist.")
+        return False
     try:
         # Start an Excel app in the background (visible=False)
         with xw.App(visible=False) as app:
@@ -157,8 +162,10 @@ if __name__ == "__main__":
     # !! IMPORTANT !!
     # !! CHANGE THE MACRO NAME to your actual macro.
     # The file path has been set to the one you provided.
-    excel_file_to_read = r'C:\Users\inzun\OneDrive\Persona Fisica\Proyectos\Puebla VW\VW371 Jetta\05 Tasks\2025 CW23 USTW5\VW336-3_VW371_USTW_ARG5_Verriegelunguebersicht_20250829.xlsm'
-    
+    excel_file_to_read = r'C:\Users\inzun\OneDrive\Persona Fisica\Proyectos\Puebla VW\VW371 Jetta\05 Tasks\2025 CW40 USTW5\Verriegelungmatrix_20251014\ARG5\VW336-3_VW371_USTW_ARG5_Verriegelunguebersicht_20251014.xlsm'
+    robot_json_file = os.path.join(os.path.dirname(excel_file_to_read), "extracted_data.json")
+    robot_excel_file = os.path.join(os.path.dirname(excel_file_to_read), "extracted_data.xlsx")
+
     # Example: 'Module1.UpdateAllData'. Leave as "" if you have no macro.
     macro_to_run = "cmd_refresh" 
 
@@ -188,4 +195,11 @@ if __name__ == "__main__":
             except (KeyError, IndexError):
                 print(f"\nCould not access the example data.")
                 print("Please check if any sheets matched the robot name pattern and were processed.")
+
+    print(f"\n\n")
+
+    for sheet_name, frames in extracted_data.items():
+        for frame in frames:
+            print(f"Processing frame for sheet: {sheet_name}, frame: {frame}")
+        #main.create_dfs(frames, robot_excel_file, robot_json_file)
 
